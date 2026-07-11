@@ -1,8 +1,8 @@
 server:
-  port: 4711
+  port: 8000
 spring:
   application:
-    name: project_QLHP
+    name: nexttrip
 
   jpa:
     show-sql: true
@@ -13,7 +13,7 @@ spring:
         use_sql_comments: true
   #        ddl-auto: update
   datasource:
-    url: jdbc:postgresql://localhost:5432/et4711
+    url: jdbc:postgresql://localhost:5432/nexttrip
     username: postgres
     password: 2111
     driver-class-name: org.postgresql.Driver

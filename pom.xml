@@ -10,9 +10,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>project_QLHP</artifactId>
+	<artifactId>nexttrip</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>project_QLHP</name>
+	<name>nexttrip</name>
 	<description>Project for web app course</description>
 	<url/>
 	<licenses>

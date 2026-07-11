@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name '.QLHP' is invalid and this project uses 'QLHP' instead.
+* The original package name '.nexttrip' is invalid and this project uses 'nexttrip' instead.
 
 # Getting Started
 
