@@ -24,7 +24,7 @@ public interface TripRepository extends JpaRepository<Trip, Integer>, JpaSpecifi
     FROM Trip t
     JOIN TripMember tm ON tm.tripId.id = t.id
     WHERE t.ownerId <> :userId
-    AND tm.userId.user_id = :userId
+    AND tm.userId.id = :userId
     AND tm.status = :status
 """)
     List<Trip> findInvitingTripsByUserId(

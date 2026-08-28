@@ -1,5 +1,6 @@
 package nexttrip.app.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nexttrip.app.domain.payload.request.InviteMemberRequest;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/v1.0/companion")
+@SecurityRequirement(name = "Bearer Authentication")
+
 public class CompanionController {
     private final CompanionService companionService;
 

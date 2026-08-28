@@ -1,5 +1,6 @@
 package nexttrip.app.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nexttrip.app.domain.payload.request.CreateExpenseRequest;
@@ -16,6 +17,8 @@ import javax.validation.Valid;
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
+
 @RequestMapping("api/v1.0/finance")
 public class FinanceController {
 

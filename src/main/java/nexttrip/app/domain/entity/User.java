@@ -18,10 +18,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Integer user_id;
+    private Integer id;
 
     @Column(name = "user_name", nullable = false, unique = true)
-    private String user_name;
+    private String username;
 
     @Column(name = "password")
     private String password;
@@ -35,11 +35,14 @@ public class User {
     @Column(name = "avatar")
     private String avatar;
 
+    @Column(name = "fullname")
+    private String fullName;
+
     @CreationTimestamp
     @Column(name = "created_at")
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 }

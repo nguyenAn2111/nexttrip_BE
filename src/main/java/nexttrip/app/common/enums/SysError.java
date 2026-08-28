@@ -8,4 +8,5 @@ public enum SysError {
     COURSE_CODE_EXISTED,
 
     REGISTRATION_NOT_FOUND,
+    USER_NOT_FOUND,
 }

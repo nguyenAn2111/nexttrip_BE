@@ -1,5 +1,6 @@
 package nexttrip.app.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import javax.validation.Valid;
 @CrossOrigin(origins = "*")
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
 @RequestMapping("api/v1.0/itinerary")
 public class ItineraryController {
 
