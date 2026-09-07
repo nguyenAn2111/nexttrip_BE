@@ -32,11 +32,11 @@ public class DomainUserDetailsService implements UserDetailsService {
 
     @Transactional
     public UserJwtPayload mapToJwtPayload (User user) {
-        UserJwtPayload userDetails= new UserJwtPayload(
+        return new UserJwtPayload(
                 user.getId(),
                 user.getUsername(),
-                user.getFullName(),
-                user.getPassword());
-        return userDetails;
+                user.getPassword(),
+                user.getFullName()
+        );
     }
 }

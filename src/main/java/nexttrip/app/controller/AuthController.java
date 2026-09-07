@@ -19,7 +19,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public TokenResponse login(@RequestBody LoginRequest request){
-        log.info("Login request: {}", request);
+        log.info("Login username: {}", request.getUsername());
         var response = authService.login(request);
         log.info("Login response: {}", response);
         return response;

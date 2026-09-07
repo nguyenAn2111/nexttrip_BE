@@ -31,12 +31,20 @@ public class AuthServiceImpl implements AuthService {
     public TokenResponse login (LoginRequest request) {
 
         String username = request.getUsername().toLowerCase();
-        User user = this.userService.getUser(username);
+//        User user = this.userService.getUser(username);
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, request.getPassword());
+        log.info("=== LOGIN START ===");
+        log.info("authenticationToken={}", authenticationToken);
+
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        log.info("Authenticated: {}", authentication.isAuthenticated());
+        log.info("Principal: {}", authentication.getPrincipal());
+
         String token = tokenProvider.createToken(authentication);
+        log.info("token: {}", token);
         String refreshToken = tokenProvider.createRefreshToken(authentication);
+        log.info("refreshToken: {}", refreshToken);
 
 //        user.setLastLoginAt(newmDate());
 //        this.userRepository.save(user);

@@ -12,7 +12,7 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @JsonIgnoreProperties(
-        value = {"password", "enabled", "authorities", "accountNonExpired", "accountNonLocked" }
+        value = {"password", "enabled", "authorities", "accountNonExpired", "credentialsNonExpired", "accountNonLocked" }
 )
 
 public class UserJwtPayload implements Serializable, UserDetails {
@@ -23,7 +23,7 @@ public class UserJwtPayload implements Serializable, UserDetails {
 
 
     public UserJwtPayload(Map<String, Object> payload) {
-        id = Integer.parseInt((String) payload.get("id"));
+        id = ((Number) payload.get("id")).intValue();
         username = (String) payload.get("username");
         fullName = (String) payload.get("fullName");
     }
