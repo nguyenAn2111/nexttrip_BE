@@ -9,6 +9,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,8 +25,9 @@ public class SecurityProblemSupport implements AuthenticationEntryPoint, AccessD
     }
 
     @Override
-    public void commence (final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException exception){
+    public void commence (final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException exception) {
         resolver.resolveException(request, response, null, exception);
+//        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Unauthorized");
     }
 
     @Override

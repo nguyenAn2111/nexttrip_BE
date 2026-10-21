@@ -1,6 +1,7 @@
 package nexttrip.app.service;
 
 import nexttrip.app.domain.payload.request.LoginRequest;
+import nexttrip.app.domain.payload.request.RefreshTokenRequest;
 import nexttrip.app.domain.payload.response.TokenResponse;
 import org.springframework.stereotype.Service;
 
@@ -8,4 +9,8 @@ import org.springframework.stereotype.Service;
 public interface AuthService {
 
     TokenResponse login(LoginRequest request);
+
+    void logout();
+
+    TokenResponse refreshToken(RefreshTokenRequest request);
 }

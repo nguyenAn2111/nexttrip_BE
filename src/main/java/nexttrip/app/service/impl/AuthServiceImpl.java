@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nexttrip.app.domain.entity.User;
 import nexttrip.app.domain.payload.request.LoginRequest;
+import nexttrip.app.domain.payload.request.RefreshTokenRequest;
 import nexttrip.app.domain.payload.response.TokenResponse;
 import nexttrip.app.repository.UserRepository;
 import nexttrip.app.service.AuthService;
 import nexttrip.app.service.UserService;
 import nexttrip.fw.security.jwt.TokenProvider;
+import nexttrip.fw.utils.SecurityUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -34,21 +36,31 @@ public class AuthServiceImpl implements AuthService {
 //        User user = this.userService.getUser(username);
 
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, request.getPassword());
-        log.info("=== LOGIN START ===");
-        log.info("authenticationToken={}", authenticationToken);
+
 
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        log.info("Authenticated: {}", authentication.isAuthenticated());
-        log.info("Principal: {}", authentication.getPrincipal());
 
         String token = tokenProvider.createToken(authentication);
-        log.info("token: {}", token);
         String refreshToken = tokenProvider.createRefreshToken(authentication);
-        log.info("refreshToken: {}", refreshToken);
 
-//        user.setLastLoginAt(newmDate());
+//        user.setLastLoginAt(newDate());
 //        this.userRepository.save(user);
 
+        return new TokenResponse(token, refreshToken);
+    }
+
+    @Override
+    public void logout (){
+        String username = SecurityUtils.getCurrentUsernameLogin();
+        if (username.equals("anonymous")) {
+            tokenProvider.removeToken(username);
+        }
+    }
+
+    @Override
+    public TokenResponse refreshToken(RefreshTokenRequest request){
+        String refreshToken = request.getRefreshToken();
+        String token = tokenProvider.refreshToken(refreshToken);
         return new TokenResponse(token, refreshToken);
     }
 }

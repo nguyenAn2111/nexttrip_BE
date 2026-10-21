@@ -9,6 +9,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import nexttrip.app.common.Constants;
+import nexttrip.app.domain.payload.request.RefreshTokenRequest;
 import nexttrip.fw.security.DomainUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -94,6 +95,21 @@ public class TokenProvider {
             String subject = claims.getSubject();
             String jti = claims.getId();
             if (StringUtils.hasText(redisTemplate.opsForValue().get(Constants.Redis.TOKEN_KEY + subject))){
+                return jti.equals(redisTemplate.opsForValue().get(Constants.Redis.TOKEN_KEY + subject));
+            }
+            return false;
+        } catch (ExpiredJwtException | IllegalArgumentException | UnsupportedJwtException | MalformedJwtException e) {
+            log.trace(INVALID_JWT_TOKEN, e);
+            return false;
+        }
+    }
+
+    public boolean validateRefreshToken(String refreshToken) {
+        try{
+            Claims claims = jwtParser.parseClaimsJws(refreshToken).getBody();
+            String subject = claims.getSubject();
+            String jti = claims.getId();
+            if (StringUtils.hasText(redisTemplate.opsForValue().get(Constants.Redis.REFRESH_TOKEN_KEY + subject))){
                 return jti.equals(redisTemplate.opsForValue().get(Constants.Redis.REFRESH_TOKEN_KEY + subject));
             }
             return false;
@@ -110,4 +126,30 @@ public class TokenProvider {
         return new UsernamePasswordAuthenticationToken(userJwtPayload, token, null);
     }
 
+    public void removeToken(String username){
+        redisTemplate.delete(Constants.Redis.TOKEN_KEY + username);
+        redisTemplate.delete(Constants.Redis.REFRESH_TOKEN_KEY + username);
+    }
+
+    public String refreshToken(String refreshToken) {
+        if (!validateRefreshToken(refreshToken)) return null;
+
+        Claims claims = jwtParser.parseClaimsJws(refreshToken).getBody();
+        String subject = claims.getSubject();
+        UserJwtPayload userJwtPayload = (UserJwtPayload) domainUserDetailsService.loadUserByUsername(subject);
+
+        long now = (new Date()).getTime();
+        Date validity = new Date(now + tokenValidityInMilliseconds);
+        String jti = UUID.randomUUID().toString();
+
+        redisTemplate.opsForValue().set(Constants.Redis.TOKEN_KEY + subject, jti, tokenValidityInMilliseconds, TimeUnit.MILLISECONDS);
+        return Jwts
+                .builder()
+                .setId(jti)
+                .setSubject(subject)
+                .setExpiration(validity)
+                .claim(PAYLOAD_KEY, userJwtPayload)
+                .signWith(key, SignatureAlgorithm.HS512)
+                .compact();
+    }
 }

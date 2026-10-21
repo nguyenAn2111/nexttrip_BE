@@ -14,6 +14,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +28,7 @@ public class JwtOncePerRequestFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
 
     public JwtOncePerRequestFilter(TokenProvider tokenProvider) {
+
         this.tokenProvider = tokenProvider;
     }
 
@@ -37,7 +39,9 @@ public class JwtOncePerRequestFilter extends OncePerRequestFilter {
             @NotNull
             HttpServletResponse servletResponse,
             @NotNull
-            FilterChain filterChain) throws IOException {
+            FilterChain filterChain
+    ) throws IOException {
+//    )throws IOException, ServletException{
 
         String jwt = null;
         try {
@@ -47,14 +51,20 @@ public class JwtOncePerRequestFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             filterChain.doFilter(servletRequest,servletResponse);
+
         }catch (Exception e) {
             log.error(
-                    "Request uri: {} happen UnauthorizedException with token: {} message {},", servletRequest, jwt, e.getMessage());
+
+                    "Request uri: {} happen UnauthorizedException with token: {} message {},", servletRequest.getRequestURI(), jwt, e.getMessage());
             BaseResponse<?> baseResponse = BaseResponse.error(e.getMessage(), HttpStatus.UNAUTHORIZED.value());
             servletResponse.setStatus(HttpStatus.OK.value());
+//            servletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
             servletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
             servletResponse.getWriter().write(convertObjectToJson(baseResponse));
+//            return;
         }
+
+
     }
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
